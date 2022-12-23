@@ -1,0 +1,22 @@
+{
+  "name": "evades.io-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "imageParser.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Neondertalec/evades.io-tools.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Neondertalec/evades.io-tools/issues"
+  },
+  "homepage": "https://github.com/Neondertalec/evades.io-tools#readme",
+  "dependencies": {
+    "fs": "^0.0.1-security"
+  }
+}

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="google" content="notranslate">
+  <title>Guide</title>
+  <style>
+    html, body{
+      padding:0;
+      margin:0;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+      font-family: monospace;
+    }
+
+    .bg{
+      width:100%;
+      height:100%;
+      background-color:#111;
+      overflow-x:hidden;
+    }
+
+    .section{
+      padding: 5px;
+      width: 100%;
+      background-color: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: row;
+      flex-wrap: wrap;
+      font-size: 14pt;
+    }
+
+    .section .break{
+      flex-basis: 100%;
+    }
+
+    .section-title{
+      width:content;
+      color:white;
+      width:100%;
+      text-align:center;
+      background: #444;
+      border-bottom: solid 2px #fff;
+      font-size: 25pt;
+    }
+
+    h2{
+      color:white;
+      max-width:700px;
+      text-align:center;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="bg">
+    <div class="section">
+      <h1 class="section-title">Colors</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929351397193953310/unknown.png">
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929354111755878440/unknown.png">
+      <div class="break"></div>
+      <h2>The colors can be chosen in 2 ways, the color picker (2 buttons to the right of the Clone button) or the 6 HSL inputs. 1st 3 are the main color, other 3 are the outline color.</h2>
+      <div class="break"></div>
+      <h2>The clone button duplicates the colors and the "+" button adds a new one with default values.</h2>
+      <div class="break"></div>
+      <h2>To choose the color you want to use to draw on the card you need to click on one of the two squear to the right of the HSL inputs. They also serve as a preview of the color so you know which one is which.</h2>
+      <div class="break"></div>
+      
+      <h1 class="section-title">Drawing on the card</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929355258034012170/unknown.png">
+      <div class="break"></div>
+      <h2>
+        The default card looks like this.
+        <br>
+        to draw on the card with the sellected color you just need to click on the tile you want to change. You can also hold the mouse down and slide. Enery tile you slide over gets recolored.
+        <br>
+        My example:
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929413136468021318/previewFile.png">
+      <div class="break"></div>
+      <h2>
+        If you made an error in filling tiles you can alway undo or redo.
+        <br>
+        Undo - key U (u)
+        <br>
+        Redo - key I (i)
+      </h2>
+      <div class="break"></div>
+
+      <h1 class="section-title">Card data</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929413478056362014/unknown.png">
+      <div class="break"></div>
+      <h2>
+        The card has 5 inputs that contain data about the tiles.
+        <br>
+        1) Tiles count in a row (left to right). Default is 12
+        <br>
+        2) Tiles count in a column (top to bottom). Default is 9
+        <br>
+        3) the ammount of pixels the outline of a tile has. Default is 2
+        <br>
+        4) the width of the tile. Default is 46
+        <br>
+        5) the height of the tile. Default is 46
+      </h2>
+      <div class="break"></div>
+
+      <h1 class="section-title">Text - the easy part</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929415994168979516/unknown.png">
+      <div class="break"></div>
+      <h2>The text is an important part of the card. It has lots of different thing that can be changed.</h2>
+      <div class="break"></div>
+      <h2>
+        The buttons at the top:<br>
+        Draw: Draws the text if the button green.<br>
+        Hide: Hides the iformation about the text.<br>
+        Clone: Clones the text.<br>
+        Move/Stop: Sets to move/static mode. Makes you able to move the text with the mouse. The coordinates that were in "tl", will be changed in "tl". Others will be changed in pixels. 
+      </h2>
+      <div class="break"></div>
+      <h2 style="text-align:left;">
+        font: Any font that is builtin or is on <a href="https://fonts.google.com/" target="_blank" rel="noopener noreferrer">Google fonts</a>.<br>
+        text: The text that is displayed in the card. To make a new line you need to press the "enter" key.<br>
+        color: The color of the text.<br>
+        alpha: The alpha of the color.<br>
+        outline: The color of the outline.<br>
+        alpha: The alpha of the outline.<br>
+        shadow color: The color of the shadow. Note, the shadow strength depends on the alpha of the outline or the color.<br>
+        x and y: The position of the text on the X. It may be "center", a number (in pixels) or with a "tl" at the end (e.g. 5tl). the tl means "tile".<br>
+        size: The size of the font.<br>
+        outline size: The size of the outline.<br>
+        shadow size: The size of the shadow.<br>
+        line height: The new line distance from the line above.<br>
+        bold: Makes the text bold.<br>
+        italic: Makes the text italic.<br>
+        align: The text align. Left Center or Right.<br>
+      </h2>
+      <div class="break"></div>
+      <h2>What I made:</h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929425222854123560/previewFile_1.png">
+      <div class="break"></div>
+      <h1 class="section-title">Text - the hard part</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929426905898295337/unknown.png">
+      <div class="break"></div>
+      <h2>
+        The hard part is text editing. As you can see in the picture, you can use different colors, outlines e.t.c. in 1 text.<br>
+        You use them by putting them in to a &#60;key=value>.<br>
+        The color ones may accept a color like #123456, rgb(255,255,0), hsl(100, 50%, 50%).<br>
+        The size and x,y ones are a number like 1, 6.65, -24 (only x and y can "actually" be negative). X and Y are calculated from the place they were called. &#60;x=10> will move the text 10 pixels to the right.<br>
+        Bold and italic dont neev a value. its just &#60;b> and &#60;i>.
+      </h2>
+      <div class="break"></div>
+      <h1 class="section-title">Text - the very hard part (Variables)</h1>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929430759532527686/unknown.png">
+      <div class="break"></div>
+      <h2>
+        You can create a variable. But what does it do?<br>
+        A variable is a thing that may shorten your text.<br>
+        To use them you do &#60;var=varName;Argument0;Argument1...>.<br>
+        What?<br>
+        Lets say you want a variable that will act as a custom color.<br>
+        You will do key: myColor, value: &#60;c=red>. This will make a variable that does the same as &#60;c=red><br>
+        So how do i use them?<br>
+        In the text you will type &#60;var=myColor;>. Done!<br>
+        Ok.. So what would i even use it?<br>
+        Lets say you have 5 parts where you need a different color. if you do it with multiple text, editing it will be a pain. If you do it by &#60;c=red>, Imagine changing it. You will be suppost to find all 5 sport and change them multiple times untill you find the color you need.<br>
+        But if you do it with a var, all you need to do is to change the vars value!<br>
+        Ok. So what are the arg0, arg1 etc?<br>
+        In the vars value you can add a {0}, {1} etc..<br>
+        the {0} will be changed by the 1st argument, {1} by the second and so on.<br>
+        Lets make a variable with 2 arguments.<br>
+      </h2>
+      <div class="break"></div>
+      <h2>
+        So i made a "double tag" variable withe values as in the image below.
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929433984524496966/unknown.png">
+      <div class="break"></div>
+      <h2>
+        Then i typed &#60;var=double arg;arg1;arg2> in to the text and got this cool result!
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929434095174451210/unknown.png">
+      <div class="break"></div>
+      <h2>
+        The variable may contain another variable inside it too!.<br>
+        When there are more than one variables with the same name, their key will be colored in orange. It is a waring that something my be different. To make it be normal again, you can click on the "Use" button to toggle the usability of a variable.<br>
+      </h2>
+      <div class="break"></div>
+      <h2>
+        There are also built in variables. You can overwrite them tho.<br>
+        They are:
+      </h2>
+      <div class="break"></div>
+      <h2>
+        Heroes:<br>
+        magmax, rime, morfe, aurora, necro, brute, nexus, shade, euclid, chrono, reaper, rameses, jolt, ghoul, cent, jotunn, candy, mirage, boldrock
+      </h2>
+      <div class="break"></div>
+      <h2>
+        Heroes with glow color:<br>magmaxg, rimeg, morfeg, aurorag, necrog, bruteg, nexusg, shadeg, euclidg, chronog, reaperg, ramesesg, joltg, ghoulg, centg, jotunng, candyg, mirageg, boldrockg
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929437517911044176/unknown.png">
+      <div class="break"></div>
+      <h2>
+        Special:<br>wreath, wreathg, bi
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929438410102411314/unknown.png">
+      <div class="break"></div>
+      <h2>
+        Enemies:<br>wall, normal, homing, dasher, slowing, experience_drain, enlarging, draining, gravity, repelling, turning, sizing, sniper, freezing, teleporting, wavy, zigzag, zoning, spiral, oscillating, switch, liquid, icicle, slippery, ice_sniper, disabling, speed_sniper, regen_sniper, radiating_bullets, immune, pumpkin, tree, frost_giant, snowman, corrosive, toxic, corrosive_sniper, poison_sniper, magnetic_reduction, magnetic_nullification, positive_magnetic_sniper, negative_magnetic_sniper, residue, fire_trail, ice<br>
+      </h2>
+      <div class="break"></div>
+      <img src="https://cdn.discordapp.com/attachments/617049086452957189/929436561156735096/unknown.png">
+
+
+    </div>
+  </div>
+
+  <script></script>
+</body>
+</html>
