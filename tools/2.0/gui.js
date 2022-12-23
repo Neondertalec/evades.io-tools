@@ -344,6 +344,14 @@ class GUI{
 
 			Object.values(Canvas.editingLayouts).forEach(e=>toolsLay.appendChild(e.element));
 			
+			/*GUI.createElementP("div", null, (e)=>{
+				GUI.createElementP("a", null, (e)=>{
+					e.href = "./guide.html";
+					e.innerText = "Link to a guide page."
+					e.target = "blank";
+				},e)
+			},toolsLay)*/
+			
 		}, document.body);
 	}
 }
