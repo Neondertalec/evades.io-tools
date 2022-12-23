@@ -1,0 +1,251 @@
+html, body{
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+	background-color: black;
+	overflow: hidden;
+}
+
+*::-webkit-scrollbar{
+	width: 7px;
+}
+*::-webkit-scrollbar-thumb{
+	background: #6b6b6b;
+	border-radius: 10px;
+	border: solid 1px #000;
+}
+
+*:not(button){
+	font-family: monospace;
+	color: white;
+}
+
+option,
+select,
+textarea,
+input{
+	background-color: #333;
+	border: solid 2px #00000033;
+}
+
+input[type="color"]{
+	padding: 0;
+    background-color: transparent;
+    border: 0;
+	height: 30px;
+    margin: -4px 0 -4px 0;
+}
+
+button{
+	border-style: solid;
+	border-width: 2px;
+	border-radius: 5px;
+}
+
+.center{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.prompt{
+	padding: 10px;
+	background-color: #333;
+	border: solid 2px #444;
+	max-width: 40%;
+}
+
+.prompt-title{
+	text-align: center;
+	margin-bottom: 20px;
+	font-size: 16pt;
+}
+
+.prompt-buttons{
+	display: flex;
+	flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+	grid-gap: 10px;
+}
+
+.prompt-button{
+	font-size: 14pt;
+}
+
+.btn-white{
+	border: solid 2px #777;
+	background:#666;
+	color: white;
+	padding: 7px;
+}
+
+.btn-white:hover{
+	border: solid 2px #999;
+	background:#888;
+}
+
+.btn-green{
+	background-color: rgb(0, 150, 0);
+	border-color: rgb(0, 104, 0);
+	color: rgb(0, 55, 0);
+	font-weight: bold;
+}
+
+.btn-green:hover{
+	background-color: rgb(0, 173, 0);
+	border-color: rgb(0, 120, 0);
+	color: rgb(0, 69, 0);
+	font-weight: bold;
+}
+
+.btn-orange{
+	background-color: rgb(150, 87, 0);
+	border-color: rgb(104, 64, 0);
+	color: rgb(55, 23, 0);
+	font-weight: bold;
+}
+
+.btn-orange:hover{
+	background-color: rgb(173, 92, 0);
+	border-color: rgb(120, 52, 0);
+	color: rgb(69, 40, 0);
+	font-weight: bold;
+}
+
+.btn-red{
+	background-color: rgb(150, 0, 0);
+	border-color: rgb(104, 0, 0);
+	color: rgb(55, 0, 0);
+	font-weight: bold;
+}
+
+.btn-red:hover{
+	background-color: rgb(173, 0, 0);
+	border-color: rgb(120, 0, 0);
+	color: rgb(69, 0, 0);
+	font-weight: bold;
+}
+
+.tools-lay{
+	background-color: #444;
+	border: solid 2px #555;
+
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 300px;
+
+	bottom: 10px;
+    overflow: auto;
+}
+
+.act-mode-lay{
+	width: 100%;
+	display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+	/**background-color: #444;*/
+	padding: 5px 0 5px 0;
+	border-bottom: solid 2px #555;
+}
+
+.edit-group-head,
+.edit-head{
+	text-align: center;
+    width: 100%;
+    margin: 0;
+	border-bottom: solid 2px #666;
+    font-size: 16pt;
+}
+
+.edit-group-head{
+	font-size: 14pt;
+	height: 22px;
+}
+
+.edit-group-head > button,
+.edit-head > button{
+	float: right;
+}
+
+.edit-group{
+	/*padding: 0 5px 0 5px;*/
+}
+
+.edit-layout.compressed .edit-container,
+.edit-group.compressed .edit-group-container{
+	display: none;
+}
+
+.edit-layout{
+	border-bottom: solid 2px #777;
+}
+
+.exit-field{
+	contain: layout;
+    padding: 2px 0 2px 2px;
+}
+
+.exit-field:nth-child(2n) {
+    background-color: rgba(0, 0, 0, 0.158);
+}
+
+.exit-field > option,
+.exit-field > select,
+.exit-field > input{
+	float: right;
+	width: 60%;
+}
+
+.exit-field.extended > input{
+	float: right;
+	width: 40%;
+}
+.exit-field.extended > .extension{
+	float: right;
+	width: 20%;
+}
+
+
+.exit-field > textarea{
+	float: right;
+	width: 98%;
+	resize: vertical;
+}
+
+.colorPreview{
+	width: 58px;
+    height: 58px;
+    border: solid 2px;
+    border-radius: 0;
+	float: right;
+}
+
+
+.contextMenu{
+	width: 350px;
+	min-height: 30px;
+	max-height: 400px;
+	overflow-y: auto;
+	background-color: rgb(51, 51, 51);
+	position: absolute;
+}
+
+.contextMenu .contextMenuBtn{
+	width: 100%;
+	height: 30px;
+	background-color: #555;
+	color: white;
+}
+
+.contextMenu .contextMenuBtn:hover{
+	background-color: #666;
+}
+
+.contextMenu input.contextMenuBtn{
+	width: 50%;
+}
