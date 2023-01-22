@@ -233,6 +233,72 @@ class GUIDropDownEditField extends GUIEditField{
 	}
 }
 
+false && class GUIArrayEditField{
+	/** @type {any[]} */
+	value = [];
+	/** @type {string} */
+	title = null;
+	/** @type {string} */
+	desc = null;
+	/** @type {HTMLElement} */
+	element = null;
+	/** @type {HTMLElement} */
+	container = null;
+	/** @type {HTMLInputElement[]} */
+	fields = [];
+	/** @type {any} */
+	extraData = null;
+	onChange = ()=>{};
+
+	/**
+	 * 
+	 * @param {{title: string, value: string, validity: (string)=>boolean, onChange(string)=>void}} param0 
+	 */
+	constructor({title = "", value = null, validity = null, onChange = null}){
+		this.title = title;
+		this.value = value;
+		if(validity) this.validity = validity;
+		if(onChange) this.onChange = onChange;
+	}
+
+	setDescription(desc){
+		this.desc = desc;
+		this.fields.forEach(e=>e.title = this.desc);
+		return this;
+	}
+
+	validity(value){return true;}
+	normalize(value, final){return value;}
+
+	/**
+	 * on code set
+	 * @param {string} value
+	 * @param {number} index 
+	 */
+	set(value, index){
+		if(this.validity(value)){
+			this.value[index] = value;
+			this.update();
+		}
+	}
+
+	/**
+	 * on element change
+	 */
+	change(final, index){
+		if(this.validity(this.fields[index].value)){
+			this.value[index] = this.normalize(this.fields[index].value, final);
+			
+			if(this.value[index] != this.fields[index].value) this.fields[index].value = this.value[index];
+			
+			this.onChange([...this.value].map(e=>this.normalize(e, true)), this.extraData);
+		}
+	}
+
+	update(index){
+		this.fields[index].value = this.value;
+	}
+}
 
 class GUI{
 	static editingLayouts = [];
@@ -330,7 +396,7 @@ class GUI{
 			Canvas.editingLayouts = {
 				"Tiles": new EditingLayout({title:"Tiles", classes: [GridColor]}),
 				"Text": new EditingLayout({title:"Texts", classes: [TextGroup]}),
-				"Shapes": new EditingLayout({title:"Shapes", classes: [CircleGroup, RectGroup, ImageGroup]}),
+				"Shapes": new EditingLayout({title:"Shapes", classes: [CircleGroup, RectGroup, ImageGroup, HeroCircleGroup]}),
 				"Images": new EditingLayout({title:"Images", classes: [ImageFileGroup, ImageFileBuiltGroup]}),
 				"File": new EditingLayout({title:"File data", classes: [FileManagement], create: false}),
 			};
