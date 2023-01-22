@@ -968,7 +968,7 @@ class HeroCircleGroup extends EditingGroup{
 		this.fields["overText"] = new GUICheckboxEditField({title: "over text", value:this.data.overText, onChange:(v,e)=>this.onChange(v,e, "overText")});
 		this.fields["x"] = new GUINumberEditField({title: "x", value:this.data.x, onChange:(v,e)=>this.onChange(parseFloat(v), e, "x"), extraData: this.data.x_ex, extension: ["px", "tl", "%"]});
 		this.fields["y"] = new GUINumberEditField({title: "y", value:this.data.y, onChange:(v,e)=>this.onChange(parseFloat(v), e, "y"), extraData: this.data.y_ex, extension: ["px", "tl", "%"]});
-		this.fields["scale"] = new GUISliderEditField({title: "Scale", value:this.data.scale, min: 0.01, max: 10, step: 0.01, onChange:(v,e)=>this.onChange(v,e, "scale")});
+		this.fields["scale"] = new GUISliderEditField({title: "scale", value:this.data.scale, min: 0.01, max: 10, step: 0.01, onChange:(v,e)=>this.onChange(v,e, "scale")});
 
 		Object.values(this.fields).forEach(e=>this.container.appendChild(e.element));
 	}
@@ -1058,6 +1058,7 @@ class HeroCircleGroup extends EditingGroup{
 		return [
 			...super.initPack(),
 			["overText", "ot", false],
+			["hero", "he", ""],
 			["text", "t", ""],
 			["tcolor", "tc", "#aaaaaa"],
 			["toutline", "toc", "#777777"],
