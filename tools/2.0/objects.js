@@ -968,6 +968,7 @@ class HeroCircleGroup extends EditingGroup{
 		this.fields["overText"] = new GUICheckboxEditField({title: "over text", value:this.data.overText, onChange:(v,e)=>this.onChange(v,e, "overText")});
 		this.fields["x"] = new GUINumberEditField({title: "x", value:this.data.x, onChange:(v,e)=>this.onChange(parseFloat(v), e, "x"), extraData: this.data.x_ex, extension: ["px", "tl", "%"]});
 		this.fields["y"] = new GUINumberEditField({title: "y", value:this.data.y, onChange:(v,e)=>this.onChange(parseFloat(v), e, "y"), extraData: this.data.y_ex, extension: ["px", "tl", "%"]});
+		this.fields["scale"] = new GUISliderEditField({title: "Scale", value:this.data.scale, min: 0.01, max: 10, step: 0.01, onChange:(v,e)=>this.onChange(v,e, "scale")});
 
 		Object.values(this.fields).forEach(e=>this.container.appendChild(e.element));
 	}
@@ -994,18 +995,18 @@ class HeroCircleGroup extends EditingGroup{
 		if((extras == 1 && !this.data.overText) || (extras == 0 && this.data.overText)) return;
 		
 		this.applyBase(ctx);
-		
+
 		let renderPos = parsePosition(this.data.x, this.data.x_ex, this.data.y, this.data.y_ex);
 
 		if(this.data.outerRadius > 0){
 			ctx.beginPath();
-			ctx.arc(ox + renderPos[0], oy + renderPos[1], (+(this.data.radius)+ +(this.data.outerRadius)/2-1), 0, Math.PI*2);
+			ctx.arc(ox + renderPos[0], oy + renderPos[1], (+(this.data.radius)+ +(this.data.outerRadius)/2-1)*this.data.scale, 0, Math.PI*2);
 			ctx.stroke();
 			ctx.closePath();
 		}
 				
 		ctx.beginPath();
-		ctx.arc(ox + renderPos[0], oy + renderPos[1], this.data.radius, 0, Math.PI*2);
+		ctx.arc(ox + renderPos[0], oy + renderPos[1], this.data.radius*this.data.scale, 0, Math.PI*2);
 		ctx.fill();
 		ctx.closePath();
 
@@ -1016,10 +1017,10 @@ class HeroCircleGroup extends EditingGroup{
 
 		ctx.fillStyle = this.data.tcolor;
 		ctx.strokeStyle = this.data.toutline;
-		ctx.lineWidth = this.data.toutlineWidth;
+		ctx.lineWidth = this.data.toutlineWidth * this.data.scale;
 
-		ctx.strokeText(this.data.text, ox + renderPos[0] + this.data.offsetx, oy + renderPos[1] + this.data.offsety);
-		ctx.fillText(this.data.text, ox + renderPos[0] + this.data.offsetx, oy + renderPos[1] + this.data.offsety);
+		ctx.strokeText(this.data.text, ox + renderPos[0] + this.data.offsetx * this.data.scale, oy + renderPos[1] + this.data.offsety * this.data.scale);
+		ctx.fillText(this.data.text, ox + renderPos[0] + this.data.offsetx * this.data.scale, oy + renderPos[1] + this.data.offsety * this.data.scale);
 
 		ctx.closePath();
 
@@ -1037,11 +1038,12 @@ class HeroCircleGroup extends EditingGroup{
 	applyBase(ctx){
 		ctx.fillStyle = this.data.color;
 		ctx.strokeStyle = this.data.outline;
-		ctx.lineWidth = this.data.outerRadius;
+		ctx.lineWidth = this.data.outerRadius * this.data.scale;
+
 
 		let font = ctx.fontBuilder = new FontBuilder(ctx);
 		font.font = "Comic Sans MS";
-		font.fontSize = this.data.tfontSize;
+		font.fontSize = this.data.tfontSize * this.data.scale;
 		font.bold = false;
 		font.italic = false;
 	}
@@ -1074,6 +1076,7 @@ class HeroCircleGroup extends EditingGroup{
 			
 			["offsetx", "ofx", 0],
 			["offsety", "ofy", 0],
+			["scale", "sca", 1],
 			
 		]
 	}
