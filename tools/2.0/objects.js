@@ -984,7 +984,7 @@ class HeroCircleGroup extends EditingGroup{
 			this.data[key+"_ex"] = e;
 		}
 		if(key == "hero"){
-			this.import(prefabs.heroCircles[v], true);
+			this.import({...prefabs.heroCircles[v], lid: this.lid}, true);
 		}
 
 		Canvas.render();
