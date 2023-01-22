@@ -5,10 +5,62 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Document</title>
+	<style>
+		body,html,
+		.main{
+			width: 100%;
+			height: 100%;
+			padding: 0;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			font-size: 30px;
+
+			
+			background: #111;
+   			color: white;
+		}
+
+		.note{
+			margin-top: 20%;
+   			margin-bottom: 20px;
+		}
+
+		button{
+			width: 400px;
+			font-size: 30px;
+			border-radius: 10px;
+   			margin-bottom: 20px;
+		}
+
+		.red{
+			color: #330000;
+			background: #aa0000;
+			border: solid 2px #660000;
+		}
+
+		.orange{
+			color: #442200;
+			background: #aa4700;
+			border: solid 2px #662a00;
+		}
+
+		.green{
+			color: #005500;
+			background: #00aa00;
+			border: solid 2px #006600;
+		}
+	</style>
 </head>
 <body>
+	<div class="main">
+		<div class="note">Note: the cards are not compatible with another version editor!</div>
+		<button class="green" onclick="window.location.replace(window.location.href + 'tools/2.0/index.html')">New version</button>
+		<button class="orange" onclick="window.location.replace(window.location.href + 'tools/index.html')">Old version</button>
+	</div>
 	<script>
-		window.location.replace(window.location.href + "tools/index.html");
+		//window.location.replace(window.location.href + "tools/index.html");
 	</script>
 </body>
 </html>

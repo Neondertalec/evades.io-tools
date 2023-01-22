@@ -323,13 +323,13 @@ class EditingGroup{
 		]
 	}
 	
-	import(data){
+	import(data, over = false){
 		data = data || {};
 		this.lid = data.lid;
 		
 		let ip = this.initPack();
 		for(let p of ip){
-			this.data[p[0]] = (p[1] in data) ? data[p[1]] : p[2];
+			this.data[p[0]] = (p[1] in data) ? data[p[1]] : (over ? this.data[p[0]] : p[2]);
 		}
 	}
 	
@@ -948,6 +948,133 @@ class ImageGroup extends EditingGroup{
 			["height_ex", "he_ex", "i%"],
 			["flip", "fli", false],
 			["flop", "flo", false],
+		]
+	}
+}
+
+class HeroCircleGroup extends EditingGroup{
+	static PromptName = "Hero circle";
+
+	constructor(data){
+		super(data);
+		this.render();
+	}
+
+	render(){
+		super.render({deletable: true, compressable: true, drawable: true, clonable: true, movable:true});
+
+		this.fields["hero"] = new GUIDropDownEditField({title: "hero", value:this.data.hero, options: Object.keys(prefabs.heroCircles), onChange:(v,e)=>this.onChange(v,e, "hero")});
+
+		this.fields["overText"] = new GUICheckboxEditField({title: "over text", value:this.data.overText, onChange:(v,e)=>this.onChange(v,e, "overText")});
+		this.fields["x"] = new GUINumberEditField({title: "x", value:this.data.x, onChange:(v,e)=>this.onChange(parseFloat(v), e, "x"), extraData: this.data.x_ex, extension: ["px", "tl", "%"]});
+		this.fields["y"] = new GUINumberEditField({title: "y", value:this.data.y, onChange:(v,e)=>this.onChange(parseFloat(v), e, "y"), extraData: this.data.y_ex, extension: ["px", "tl", "%"]});
+
+		Object.values(this.fields).forEach(e=>this.container.appendChild(e.element));
+	}
+
+	onChange(v, e, key){
+		super.onChange(v, e, key);
+
+		this.data[key] = v;
+		if(e && this.data[key+"_ex"] != e){
+			if(key == "x" || key == "y"){
+				this.fields[key].set(this.data[key] = transformPosition(this.data[key], this.data[key+"_ex"], e, key));
+			}
+			this.data[key+"_ex"] = e;
+		}
+		if(key == "hero"){
+			this.import(prefabs.heroCircles[v], true);
+		}
+
+		Canvas.render();
+	}
+
+	draw(ctx, ox, oy, extras){
+		if(!this.data.render) return;
+		if((extras == 1 && !this.data.overText) || (extras == 0 && this.data.overText)) return;
+		
+		this.applyBase(ctx);
+		
+		let renderPos = parsePosition(this.data.x, this.data.x_ex, this.data.y, this.data.y_ex);
+
+		if(this.data.outerRadius > 0){
+			ctx.beginPath();
+			ctx.arc(ox + renderPos[0], oy + renderPos[1], (+(this.data.radius)+ +(this.data.outerRadius)/2-1), 0, Math.PI*2);
+			ctx.stroke();
+			ctx.closePath();
+		}
+				
+		ctx.beginPath();
+		ctx.arc(ox + renderPos[0], oy + renderPos[1], this.data.radius, 0, Math.PI*2);
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.textBaseline = "middle";
+		ctx.textAlign = "center";
+
+		ctx.beginPath();
+
+		ctx.fillStyle = this.data.tcolor;
+		ctx.strokeStyle = this.data.toutline;
+		ctx.lineWidth = this.data.toutlineWidth;
+
+		ctx.strokeText(this.data.text, ox + renderPos[0] + this.data.offsetx, oy + renderPos[1] + this.data.offsety);
+		ctx.fillText(this.data.text, ox + renderPos[0] + this.data.offsetx, oy + renderPos[1] + this.data.offsety);
+
+		ctx.closePath();
+
+		this.restore(ctx);
+	}
+
+	remove(){
+		super.remove();
+	}
+
+	/**
+	 * 
+	 * @param {CanvasRenderingContext2D} ctx
+	 */
+	applyBase(ctx){
+		ctx.fillStyle = this.data.color;
+		ctx.strokeStyle = this.data.outline;
+		ctx.lineWidth = this.data.outerRadius;
+
+		let font = ctx.fontBuilder = new FontBuilder(ctx);
+		font.font = "Comic Sans MS";
+		font.fontSize = this.data.tfontSize;
+		font.bold = false;
+		font.italic = false;
+	}
+
+	restore(ctx){
+		ctx.fillStyle = "#000000";
+		ctx.strokeStyle = "#000000";
+		ctx.lineWidth = 1;
+	}
+
+	initPack(){
+		return [
+			...super.initPack(),
+			["overText", "ot", false],
+			["text", "t", ""],
+			["tcolor", "tc", "#aaaaaa"],
+			["toutline", "toc", "#777777"],
+			["tfontSize", "tfs", 21],
+			["toutlineWidth", "tow", 4],
+
+			["color", "c", "#aaaaaa"],
+			["outline", "oc", "#777777"],
+			["x", "x", 270],
+			["y", "y", 200],
+			["x_ex", "x_ex", "px"],
+			["y_ex", "y_ex", "px"],
+
+			["radius", "ra", 20],
+			["outerRadius", "ora", 2],
+			
+			["offsetx", "ofx", 0],
+			["offsety", "ofy", 0],
+			
 		]
 	}
 }
