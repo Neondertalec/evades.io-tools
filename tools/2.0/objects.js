@@ -1053,7 +1053,7 @@ class HeroCircleGroup extends EditingGroup{
 		ctx.strokeStyle = "#000000";
 		ctx.lineWidth = 1;
 
-		ctx.textBaseline = "alphabetic";
+		ctx.textBaseline = "alphabetic";//?
 		ctx.textAlign = "start";
 	}
 
