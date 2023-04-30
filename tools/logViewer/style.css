@@ -1,0 +1,16 @@
+#leaderboard{
+	width: 300px;
+    background: #aaa;
+    border: solid 1px #888;
+    border-radius: 5px;
+}
+
+.time,
+.row{
+	display: flex;
+    justify-content: center;
+}
+
+.row.dead{
+	color: red;
+}
