@@ -8,9 +8,12 @@
 	<link rel="stylesheet" href="style.css">
 </head>
 <body>
-	<input type="file" id="fileSellect">
-	<button onclick="Renderer.prevFrame()">Prev</button>
-	<button onclick="Renderer.nextFrame()">Next</button>
+	<div class="top-bar">
+		<input type="file" id="fileSellect">
+		<button onclick="Renderer.prevFrame()">Prev</button>
+		<input type="number" id="page" oninput="Renderer.setFrame(this.value)">
+		<button onclick="Renderer.nextFrame()">Next</button>
+	</div>
 	<div id="leaderboard"></div>
 	<script src="./src.js"></script>
 </body>

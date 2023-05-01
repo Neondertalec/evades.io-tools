@@ -1,16 +1,41 @@
+html{
+    background-color: #111;
+}
+
+.top-bar{
+    background-color: #777;
+    width: fit-content;
+    padding: 5px;
+    border-radius: 4px;
+}
+
 #leaderboard{
 	width: 300px;
     background: #aaa;
     border: solid 1px #888;
     border-radius: 5px;
+    margin-top: 5px;
+}
+
+#page{
+    width: 60px;
 }
 
 .time,
 .row{
+    position: relative;
 	display: flex;
     justify-content: center;
 }
 
 .row.dead{
 	color: red;
+}
+
+.row.team{
+    background-color: #018f0047;
+}
+
+.row>div{
+    margin: 0 2px;
 }

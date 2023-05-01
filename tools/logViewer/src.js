@@ -1,6 +1,7 @@
 const fileSellect = document.getElementById("fileSellect");
 fileSellect.onchange = imported;
 const leaderboard = document.getElementById("leaderboard");
+const page = document.getElementById("page");
 
 document.createElementP = function(name, args = null, fnc=null, parent = null){
 	const element = document.createElement(name)
@@ -34,6 +35,7 @@ class Sample{
 		this.area = data.area;
 		this.type = data.type;
 		this.name = data.name;
+		this.pi = data.pi;
 		this.dead = data.dead || false;
 
 		if(this.type == 1) this.dead = true;
@@ -45,10 +47,15 @@ class Sample{
 		return new Sample({...this});
 	}
 
-	node(){
-		return document.createElementP("div", {className:"row" + (this.dead? " dead" : "")}, row=>{
+	node(team){
+		let className = "row";
+		if(this.dead) className += " dead";
+		if(team.includes(this.name)) className += " team";
+
+		return document.createElementP("div", {className}, row=>{
 			document.createElementP("div", {innerText:this.name}, null, row)
-			document.createElementP("div", {innerText:`[${this.area}]`}, null, row)
+			document.createElementP("div", {innerText:`[AR:${this.area}]`}, null, row)
+			document.createElementP("div", {innerText:`[PI:${this.pi}]`}, null, row)
 		})
 	}
 }
@@ -80,11 +87,12 @@ class SampleGroup{
 		return res;
 	}
 
-	node(){
+	node(team, startTime = 0){
 		return document.createElementP("div", {className:"group"}, group=>{
-			document.createElementP("div", {className:"time", innerText:new Date(this.time).toLocaleTimeString()}, null, group);
+			
+			document.createElementP("div", {className:"time", innerText:timeToString(this.time - startTime).str || "0s"}, null, group);
 			for(let i in this.samples){
-				group.appendChild(this.samples[i].node());
+				group.appendChild(this.samples[i].node(team));
 			}
 		})
 	}
@@ -100,28 +108,39 @@ function constructRows(data){
 
 	pics.splice(0,1);
 	console.log(pics);
-	Renderer.renderRows(pics);
+	Renderer.renderRows(pics, data.ownTeam);
 }
 
 const Renderer = new (class Renderer{
 	constructor(){
 		this.pics = [];
+		this.team = [];
 		this.frame = 0;
 	}
 
-	renderRows(pics){
+	renderRows(pics, team = []){
 		this.pics = pics;
+		this.team = team;
 		this.frame = 0;
 		this.render();
 	}
 
 	nextFrame(){
-		this.frame = Math.min(this.pics.length-1, this.frame+1);
-		this.render();
+		this.setFrame(this.frame+1);
 	}
 
 	prevFrame(){
-		this.frame = Math.max(0, this.frame-1);
+		this.setFrame(this.frame-1);
+	}
+
+	setFrame(frame){
+		const toUpdate = frame != "";
+
+		frame = parseInt(frame);
+		if(isNaN(frame)) frame = this.frame;
+
+		this.frame = Math.min(Math.max(0, frame), this.pics.length-1)
+		if(toUpdate) page.value = this.frame;
 		this.render();
 	}
 
@@ -129,6 +148,25 @@ const Renderer = new (class Renderer{
 		leaderboard.innerHTML="";
 
 		const frame = this.pics[this.frame];
-		leaderboard.appendChild(frame.node());
+		leaderboard.appendChild(frame.node(this.team, this.pics[0]?.time));
 	}
 })()
+
+function timeToString(timeFor, ums = false) {
+	let s = Math.floor(timeFor / 1000);
+	let ms = Math.round((timeFor / 1000 - s) * 1000)
+	let m = Math.floor(s / 60);
+	let h = Math.floor(m / 60);
+	let d = Math.floor(h / 24);
+	s = s % 60;
+	m = m % 60;
+	h = h % 24;
+	return {
+		d,
+		h,
+		m,
+		s,
+		ms,
+		str: `${d ? ` ${d}d` : ""}${h ? ` ${h}h` : ""}${m ? ` ${m}m` : ""}${s ? ` ${s}s` : ""}${ums && ms ? ` ${ms}ms` : ""}`
+	}
+}
