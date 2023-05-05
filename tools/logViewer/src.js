@@ -109,8 +109,9 @@ class SampleGroup{
 			const groups = Object.values(this.samples).group(e=>e.map);
 			for(let i in groups){
 				document.createElementP("div", {className:"world", innerText:i}, null, group);
-				for(let j in groups[i]){
-					group.appendChild(groups[i][j].node(team));
+				const sorted = groups[i].sort((v1,v2)=>v2.area-v1.area);
+				for(let j in sorted){
+					group.appendChild(sorted[j].node(team));
 				}
 			}
 		})
