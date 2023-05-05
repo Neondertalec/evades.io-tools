@@ -21,6 +21,7 @@ html, body{
     width: 60px;
 }
 
+.world,
 .time,
 .row{
     position: relative;
@@ -38,4 +39,9 @@ html, body{
 
 .row>div{
     margin: 0 2px;
+}
+
+.world{
+    background: #bbb;
+    font-size: 16pt;
 }

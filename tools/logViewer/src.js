@@ -12,6 +12,20 @@ document.createElementP = function(name, args = null, fnc=null, parent = null){
 	return element;
 }
 
+Object.defineProperty(Array.prototype, "group", {
+	value: function(f){
+		const result = {};
+		for(const value of this){
+			const key = f(value);
+			if(!result[key]) result[key] = [];
+			result[key].push(value);
+		}
+		return result;
+
+	},
+	enumerable: false,
+})
+
 async function imported(){
 	let file = fileSellect.files.item(0);
 	if(file){
@@ -91,8 +105,13 @@ class SampleGroup{
 		return document.createElementP("div", {className:"group"}, group=>{
 			
 			document.createElementP("div", {className:"time", innerText:timeToString(this.time - startTime).str || "0s"}, null, group);
-			for(let i in this.samples){
-				group.appendChild(this.samples[i].node(team));
+
+			const groups = Object.values(this.samples).group(e=>e.map);
+			for(let i in groups){
+				document.createElementP("div", {className:"world", innerText:i}, null, group);
+				for(let j in groups[i]){
+					group.appendChild(groups[i][j].node(team));
+				}
 			}
 		})
 	}
