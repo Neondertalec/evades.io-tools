@@ -396,7 +396,7 @@ class GUI{
 			Canvas.editingLayouts = {
 				"Tiles": new EditingLayout({title:"Tiles", classes: [GridColor]}),
 				"Text": new EditingLayout({title:"Texts", classes: [TextGroup]}),
-				"Shapes": new EditingLayout({title:"Shapes", classes: [CircleGroup, RectGroup, ImageGroup, HeroCircleGroup]}),
+				"Shapes": new EditingLayout({title:"Shapes", classes: [CircleGroup, RectGroup, ImageGroup, CircleGlowGroup, RectGlowGroup, HeroCircleGroup]}),
 				"Images": new EditingLayout({title:"Images", classes: [ImageFileGroup, ImageFileBuiltGroup]}),
 				"File": new EditingLayout({title:"File data", classes: [FileManagement], create: false}),
 			};

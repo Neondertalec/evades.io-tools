@@ -827,6 +827,314 @@ class RectGroup extends EditingGroup{
 	}
 }
 
+class RectGlowGroup extends EditingGroup{
+	static PromptName = "Rectangle Glow";
+
+	constructor(data){
+		super(data);
+		this.canvas = document.createElement("canvas");
+		this.canvas.ctx = this.canvas.getContext("2d");
+		this.render();
+		this.updateCanvas();
+	}
+
+	render(){
+		super.render({deletable: true, compressable: true, drawable: true, clonable: true, movable:true});
+
+		this.fields["overText"] = new GUICheckboxEditField({title: "over text", value:this.data.overText, onChange:(v,e)=>this.onChange(v,e, "overText")});
+		this.fields["color"] = new GUIColorEditField({title: "color", value:this.data.color, onChange:(v,e)=>this.onChange(v,e, "color")});
+		this.fields["x"] = new GUINumberEditField({title: "x", value:this.data.x, onChange:(v,e)=>this.onChange(parseFloat(v), e, "x"), extraData: this.data.x_ex, extension: ["px", "tl", "%"]});
+		this.fields["y"] = new GUINumberEditField({title: "y", value:this.data.y, onChange:(v,e)=>this.onChange(parseFloat(v), e, "y"), extraData: this.data.y_ex, extension: ["px", "tl", "%"]});
+		this.fields["width"] = new GUINumberEditField({title: "width", value:this.data.width, onChange:(v,e)=>this.onChange(parseFloat(v), e, "width"), extraData: this.data.width_ex, extension: ["px", "tl", "%"]});
+		this.fields["height"] = new GUINumberEditField({title: "height", value:this.data.height, onChange:(v,e)=>this.onChange(parseFloat(v), e, "height"), extraData: this.data.height_ex, extension: ["px", "tl", "%"]});
+		this.fields["radius"] = new GUINumberEditField({title: "radius", value:this.data.radius, min: 0, onChange:(v,e)=>this.onChange(parseFloat(v),e, "radius")});
+		this.fields["angle"] = new GUINumberEditField({title: "angle", value:this.data.angle, onChange:(v,e)=>this.onChange(parseFloat(v), e, "angle")});
+
+		Object.values(this.fields).forEach(e=>this.container.appendChild(e.element));
+	}
+
+	onChange(v, e, key){
+		super.onChange(v, e, key);
+
+		this.data[key] = v;
+		if(e && this.data[key+"_ex"] != e){
+			if(key == "x" || key == "y" || key == "width" || key == "height"){
+				this.fields[key].set(this.data[key] = transformPosition(this.data[key], this.data[key+"_ex"], e, key));
+			}
+			this.data[key+"_ex"] = e;
+		}
+
+		if(["width", "height", "radius", "color"].includes(key)){
+			this.updateCanvas();
+		}
+
+		Canvas.render();
+	}
+
+	updateCanvas(){
+		const ctx = this.canvas.ctx;
+		ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+		
+		let renderSize = parsePosition(this.data.width, this.data.width_ex, this.data.height, this.data.height_ex);
+		this.canvas.width = renderSize[0];
+		this.canvas.height = renderSize[1];
+
+
+		let id = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+		let pixels = id.data;
+		let max = [this.canvas.width*4, this.canvas.height*4];
+
+		let color = this.data.color.slice(1);
+		color = [color.slice(0,2), color.slice(2,4), color.slice(4,6)].map(e=>parseInt(e, 16));
+		
+		for(let y = 0; y < max[1]; y +=4){
+			for(let x = 0; x < max[0]; x += 4){
+				let off = (y * this.canvas.width + x);
+				
+				let distFromTop = y;
+				let distFromBottom = (renderSize[1])*4-y;
+
+				let distFromLeft = x;
+				let distFromRight = (renderSize[0])*4-x;
+
+				let prc = Math.min(distFromTop, distFromBottom, distFromLeft, distFromRight) / this.data.radius;
+				pixels[off] = color[0];
+				pixels[off + 1] = color[1];
+				pixels[off + 2] = color[2];
+				pixels[off + 3] = prc*255;
+			}
+		}
+
+		ctx.putImageData(id, 0, 0);
+	}
+
+	draw(ctx, ox, oy, extras){
+		if(!this.data.render) return;
+		if((extras == 1 && !this.data.overText) || (extras == 0 && this.data.overText)) return;
+		
+		this.applyBase(ctx);
+		
+		let image = this.canvas;
+		
+		let renderPos = parsePosition(this.data.x, this.data.x_ex, this.data.y, this.data.y_ex);
+		let renderSize = parsePosition(this.data.width, this.data.width_ex, this.data.height, this.data.height_ex, image);
+
+		let x = (ox + renderPos[0]) - +renderSize[0]/2,
+			y = (oy + renderPos[1]) - +renderSize[1]/2,
+			w = +renderSize[0],
+			h = +renderSize[1],
+			angle = this.data.angle / 180 * Math.PI;
+		ctx.translate(x+w/2, y+h/2)
+		ctx.rotate(angle);
+
+		ctx.beginPath();
+		if(image){
+			try{
+				ctx.drawImage(image, -w/2, -h/2/*, w, h*/);
+			}catch(err){
+				console.log(err)
+			}
+		}
+
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.rotate(-angle);
+		ctx.translate(-x-w/2, -y-h/2);
+
+		this.restore(ctx);
+	}
+
+	remove(){
+		super.remove();
+	}
+
+	/**
+	 * 
+	 * @param {CanvasRenderingContext2D} ctx
+	 */
+	applyBase(ctx){
+		
+	}
+
+	restore(ctx){
+		
+	}
+
+	initPack(){
+		return [
+			...super.initPack(),
+			["overText", "ot", false],
+			["color", "c", "#aaaaaa"],
+			["x", "x", 270],
+			["y", "y", 200],
+			["x_ex", "x_ex", "px"],
+			["y_ex", "y_ex", "px"],
+			["angle", "a", 0],
+			["width", "wi", 20],
+			["height", "he", 20],
+			["width_ex", "wi_ex", "px"],
+			["height_ex", "he_ex", "px"],
+			["radius", "r", 2],
+		]
+	}
+}
+
+class CircleGlowGroup extends EditingGroup{
+	static PromptName = "Circle Glow";
+
+	constructor(data){
+		super(data);
+		this.canvas = document.createElement("canvas");
+		this.canvas.ctx = this.canvas.getContext("2d");
+		this.render();
+		this.updateCanvas();
+	}
+
+	render(){
+		super.render({deletable: true, compressable: true, drawable: true, clonable: true, movable:true});
+
+		this.fields["overText"] = new GUICheckboxEditField({title: "over text", value:this.data.overText, onChange:(v,e)=>this.onChange(v,e, "overText")});
+		this.fields["color"] = new GUIColorEditField({title: "color", value:this.data.color, onChange:(v,e)=>this.onChange(v,e, "color")});
+		this.fields["x"] = new GUINumberEditField({title: "x", value:this.data.x, onChange:(v,e)=>this.onChange(parseFloat(v), e, "x"), extraData: this.data.x_ex, extension: ["px", "tl", "%"]});
+		this.fields["y"] = new GUINumberEditField({title: "y", value:this.data.y, onChange:(v,e)=>this.onChange(parseFloat(v), e, "y"), extraData: this.data.y_ex, extension: ["px", "tl", "%"]});
+		this.fields["radius"] = new GUINumberEditField({title: "radius", value:this.data.radius, min: 0, onChange:(v,e)=>this.onChange(parseFloat(v),e, "radius")});
+		this.fields["glowRadius"] = new GUINumberEditField({title: "glow radius", value:this.data.glowRadius, min: 0, onChange:(v,e)=>this.onChange(parseFloat(v),e, "glowRadius")});
+		this.fields["angle"] = new GUINumberEditField({title: "angle", value:this.data.angle, onChange:(v,e)=>this.onChange(parseFloat(v), e, "angle")});
+
+		Object.values(this.fields).forEach(e=>this.container.appendChild(e.element));
+	}
+
+	onChange(v, e, key){
+		super.onChange(v, e, key);
+
+		this.data[key] = v;
+		if(e && this.data[key+"_ex"] != e){
+			if(key == "x" || key == "y"){
+				this.fields[key].set(this.data[key] = transformPosition(this.data[key], this.data[key+"_ex"], e, key));
+			}
+			this.data[key+"_ex"] = e;
+		}
+
+		if(["radius", "glowRadius", "color"].includes(key)){
+			this.updateCanvas();
+		}
+
+		Canvas.render();
+	}
+
+	updateCanvas(){
+		const ctx = this.canvas.ctx;
+		ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+		
+		let renderSize = this.data.radius*2;//parsePosition(this.data.width, this.data.width_ex, this.data.height, this.data.height_ex);
+		this.canvas.width = renderSize;
+		this.canvas.height = renderSize;
+
+
+		let id = ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+		let pixels = id.data;
+		let max = [this.canvas.width*4, this.canvas.height*4];
+		const middle = [max[0]/2, max[1]/2]
+
+		let color = this.data.color.slice(1);
+		color = [color.slice(0,2), color.slice(2,4), color.slice(4,6)].map(e=>parseInt(e, 16));
+
+		function getDistance(x1, y1, x2, y2){
+			let y = x2 - x1;
+			let x = y2 - y1;
+			
+			return Math.sqrt(x * x + y * y);
+		}
+		
+		for(let y = 0; y < max[1]; y +=4){
+			for(let x = 0; x < max[0]; x += 4){
+				let off = (y * this.canvas.width + x);
+				
+				let dist = getDistance(middle[0], middle[1], x,y);
+				if(dist < this.data.radius*4){
+					let prc = (this.data.radius*4 - dist) / this.data.glowRadius;
+					pixels[off] = color[0];
+					pixels[off + 1] = color[1];
+					pixels[off + 2] = color[2];
+					pixels[off + 3] = prc*255;
+				}
+			}
+		}
+
+		ctx.putImageData(id, 0, 0);
+	}
+
+	draw(ctx, ox, oy, extras){
+		if(!this.data.render) return;
+		if((extras == 1 && !this.data.overText) || (extras == 0 && this.data.overText)) return;
+		
+		this.applyBase(ctx);
+		
+		let image = this.canvas;
+		
+		let renderPos = parsePosition(this.data.x, this.data.x_ex, this.data.y, this.data.y_ex);
+		let renderSize = this.data.radius*2;//parsePosition(this.data.width, this.data.width_ex, this.data.height, this.data.height_ex, image);
+
+		let x = (ox + renderPos[0]) - +renderSize/2,
+			y = (oy + renderPos[1]) - +renderSize/2,
+			w = +renderSize,
+			h = +renderSize,
+			angle = this.data.angle / 180 * Math.PI;
+		ctx.translate(x+w/2, y+h/2)
+		ctx.rotate(angle);
+
+		ctx.beginPath();
+		if(image){
+			try{
+				ctx.drawImage(image, -w/2, -h/2/*, w, h*/);
+			}catch(err){
+				console.log(err)
+			}
+		}
+
+		ctx.fill();
+		ctx.closePath();
+
+		ctx.rotate(-angle);
+		ctx.translate(-x-w/2, -y-h/2);
+
+		this.restore(ctx);
+	}
+
+	remove(){
+		super.remove();
+	}
+
+	/**
+	 * 
+	 * @param {CanvasRenderingContext2D} ctx
+	 */
+	applyBase(ctx){
+		
+	}
+
+	restore(ctx){
+		
+	}
+
+	initPack(){
+		return [
+			...super.initPack(),
+			["overText", "ot", false],
+			["color", "c", "#aaaaaa"],
+			["x", "x", 270],
+			["y", "y", 200],
+			["x_ex", "x_ex", "px"],
+			["y_ex", "y_ex", "px"],
+			["radius", "r", 20],
+			["angle", "a", 0],
+			["width_ex", "wi_ex", "px"],
+			["height_ex", "he_ex", "px"],
+			["glowRadius", "gr", 2],
+		]
+	}
+}
 
 class ImageGroup extends EditingGroup{
 	static PromptName = "Image";
