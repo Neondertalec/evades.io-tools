@@ -144,6 +144,10 @@ class Tile{
 		this.id = data.id || 0;
 	}
 
+	undo(data){
+		this.id = data;
+	}
+
 	export(){
 		return {
 			id: this.id,
@@ -833,7 +837,7 @@ class RectGlowGroup extends EditingGroup{
 	constructor(data){
 		super(data);
 		this.canvas = document.createElement("canvas");
-		this.canvas.ctx = this.canvas.getContext("2d");
+		this.canvas.ctx = this.canvas.getContext("2d", {willReadFrequently: true});
 		this.render();
 		this.updateCanvas();
 	}
@@ -986,7 +990,7 @@ class CircleGlowGroup extends EditingGroup{
 	constructor(data){
 		super(data);
 		this.canvas = document.createElement("canvas");
-		this.canvas.ctx = this.canvas.getContext("2d");
+		this.canvas.ctx = this.canvas.getContext("2d", {willReadFrequently: true});
 		this.render();
 		this.updateCanvas();
 	}

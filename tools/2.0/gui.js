@@ -419,6 +419,7 @@ class GUI{
 			},toolsLay)*/
 			
 		}, document.body);
+		Gifs.show();
 	}
 }
 
@@ -436,7 +437,6 @@ class Canvas{
 	static saveCanvas = null; 
 
 	static init(content = null){
-		Canvas.grid
 		Canvas.saveCanvas = GUI.createElementP("canvas");
 		Canvas.saveCanvas.ctx = Canvas.saveCanvas.getContext("2d");
 
@@ -521,6 +521,9 @@ class Canvas{
 	}
 
 	static saveImage(sendFile = true){
+		Canvas.saveCanvas = GUI.createElementP("canvas");
+		Canvas.saveCanvas.ctx = Canvas.saveCanvas.getContext("2d");
+
 		Canvas.saveCanvas.width = Canvas.grid.width - Canvas.grid.outlineSize;
 		Canvas.saveCanvas.height = Canvas.grid.height - Canvas.grid.outlineSize;
 		Canvas.render(Canvas.saveCanvas, 0, 0);
@@ -573,7 +576,14 @@ class Canvas{
 		
 		if(Canvas.grid.columns-1 < tx || Canvas.grid.rows-1 < ty || tx < 0 || ty < 0)return;
 
+		saves.add(new saves.Field("tile", {
+			element: Canvas.grid.grid[ty][tx],
+			ov: Canvas.grid.grid[ty][tx].id,
+			nv: Canvas.sellectedTileType
+		}))
+
 		Canvas.grid.grid[ty][tx].id = Canvas.sellectedTileType;
+		
 		Canvas.render();
 	}
 

@@ -250,3 +250,20 @@ button{
 .contextMenu input.contextMenuBtn{
 	width: 50%;
 }
+
+#gifTools{
+	position: absolute;
+	right: 320px;
+	top: 10px;
+	display: flex;
+	flex-direction: column;
+	width: 85px;
+}
+
+#gifTools > *{
+	float: left;
+}
+#gifTools > span{
+	color: white;
+	text-align: center;
+}
