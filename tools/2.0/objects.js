@@ -5,22 +5,24 @@ const Mouse = new (class Mouse{
 		this.sx = 0;
 		this.sy = 0;
 		this.isDown = false;
+		this.isMiddleDown = false;
 	}
 
 	/** @param {MouseEvent} e */
 	down(e){
 		this.sx = this.x = e.clientX;
 		this.sy = this.y = e.clientY;
-
-		this.isDown = true;
+		
+		this.isMiddleDown = !(this.isDown = e.button != 1);
 	}
-
+	
 	/** @param {MouseEvent} e */
 	up(e){
+		console.log(e.button);
 		this.x = e.clientX;
 		this.y = e.clientY;
 		
-		this.isDown = false;
+		this.isMiddleDown = this.isDown = false
 	}
 
 	/** @param {MouseEvent} e */

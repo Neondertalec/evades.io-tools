@@ -444,6 +444,7 @@ class Canvas{
 			canvas.addEventListener("mousedown", (e)=>Canvas.mouseDown(e));
 			canvas.addEventListener("mousemove", (e)=>Canvas.mouseMove(e));
 			canvas.addEventListener("mouseup", (e)=>Canvas.mouseUp(e));
+			canvas.addEventListener("wheel", (e)=>Canvas.mouseWheel(e));
 			canvas.ctx = canvas.getContext("2d");
 		}, document.body)
 		window.onresize = ()=>{
@@ -485,16 +486,27 @@ class Canvas{
 	 */
 	static render(canvas = null, ox = 10, oy = 10){
 		if(!canvas) canvas = Canvas.displayCanvas;
-		
+
 		canvas.ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
+		
+		if(canvas == Canvas.displayCanvas){
+			canvas.ctx.save();
+			canvas.ctx.translate(canvas.width/2, canvas.height/2);
+			canvas.ctx.scale(Canvas.cam.z, Canvas.cam.z);
+			canvas.ctx.translate(Canvas.cam.x - canvas.width/2,Canvas.cam.y - canvas.height/2);
+			console.log();
+		}
+		
 		Canvas.grid.render(canvas.ctx, ox, oy);
 		for(let i in Canvas.editingLayoutsRender){
 			let d = Canvas.editingLayoutsRender[i];
 			for(let j in Canvas.editingLayouts[d[0]].content){
 				Canvas.editingLayouts[d[0]].content[j].draw(canvas.ctx, ox, oy, d[1]);
 			}
+		}
+		
+		if(canvas == Canvas.displayCanvas){
+			canvas.ctx.restore();
 		}
 	}
 
@@ -511,7 +523,14 @@ class Canvas{
 		Canvas.mouseAny(e);
 	}
 
+	static mouseWheel(e){
+		Canvas.scrollCamera(e);
+	}
+
 	static mouseAny(e){
+		if(Mouse.isMiddleDown){
+			Canvas.translateCamera(e);
+		}else
 		if(Canvas.actMode == "Edit tiles"){
 			if(Mouse.isDown) Canvas.repaintTile(e);
 		}else
@@ -566,13 +585,54 @@ class Canvas{
 		Canvas.actMode = btn.actMode;
 	}
 
+	static cam = {x:0, y:0, z:1}
+	/** @param {MouseEvent} e */
+	static translateCamera(e){
+		Canvas.cam.x += e.movementX / Canvas.cam.z;
+		Canvas.cam.y += e.movementY / Canvas.cam.z;
+
+		Canvas.render();
+	}
+	/**@param {WheelEvent} e */
+	static scrollCamera(e){
+		let oz = Canvas.cam.z;
+		if (e.deltaY < 0){//in
+			Canvas.cam.z *= 1.1
+		}else Canvas.cam.z /= 1.1
+
+		let ocx = (Canvas.cam.x+Canvas.displayCanvas.width) * oz/2
+		let ocy = (Canvas.cam.y+Canvas.displayCanvas.height) * oz/2
+
+		let ncx = (Canvas.cam.x+Canvas.displayCanvas.width) * Canvas.cam.z/2
+		let ncy = (Canvas.cam.y+Canvas.displayCanvas.height) * Canvas.cam.z/2
+		console.log(ocx, ocy);
+		console.log(ncx, ncy);
+		//Canvas.cam.x -= ncx - ocx;
+		//Canvas.cam.y -= ncy - ocy;
+		Canvas.render();
+	}
+
+	static getTransformedPoint(x,y) {
+		let canvas = Canvas.displayCanvas;
+		let ct = canvas.ctx;
+		ct.save();
+		ct.translate(canvas.width/2, canvas.height/2);
+		ct.scale(Canvas.cam.z, Canvas.cam.z);
+		ct.translate(Canvas.cam.x - canvas.width/2,Canvas.cam.y - canvas.height/2);
+		let p = ct.getTransform().invertSelf().transformPoint(new DOMPoint(x,y));
+		ct.restore();
+		return p;
+	}
+
 	static sellectedTileType = null;
 	/** @param {MouseEvent} e */
 	static repaintTile(e, ox = 10, oy = 10){
 		if(Canvas.sellectedTileType === null) return;
+		
+		let p = Canvas.getTransformedPoint(Mouse.x, Mouse.y);
 
-		let tx = Math.floor((Mouse.x - ox) / ((Canvas.grid.width - Canvas.grid.outlineSize * 2) / Canvas.grid.columns));
-		let ty = Math.floor((Mouse.y - oy) / ((Canvas.grid.height - Canvas.grid.outlineSize * 2) / Canvas.grid.rows));
+		let tx = Math.floor((p.x - ox) / ((Canvas.grid.width - Canvas.grid.outlineSize * 2) / Canvas.grid.columns));
+		let ty = Math.floor((p.y - oy) / ((Canvas.grid.height - Canvas.grid.outlineSize * 2) / Canvas.grid.rows));
 		
 		if(Canvas.grid.columns-1 < tx || Canvas.grid.rows-1 < ty || tx < 0 || ty < 0)return;
 
@@ -592,7 +652,7 @@ class Canvas{
 		if(Canvas.movables.length == 0) return;
 
 		for(let i in Canvas.movables){
-			Canvas.movables[i].move(e.movementX, e.movementY);
+			Canvas.movables[i].move(e.movementX / Canvas.cam.z, e.movementY / Canvas.cam.z);
 		}
 		Canvas.render();
 	}
