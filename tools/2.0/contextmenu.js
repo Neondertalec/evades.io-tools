@@ -153,6 +153,20 @@ class ContextMenu{
 					title: "Moves the text after it to the right"
 				},
 				{
+					name:"LX create",
+					finals:["<lx={V0}>{T}"],
+					final:["<lx={V0}>{T}"],
+					input:[{type:"text"}],
+					title: "Create an offset X lable."
+				},
+				{
+					name:"LX use",
+					finals:["<lx={V0};>{T}"],
+					final:["<lx={V0};>{T}"],
+					input:[{type:"text"}],
+					title: "Use an offset X lable."
+				},
+				{
 					name:"Y",
 					finals:["<y={V0}>{T}"],
 					final:["<y={V0};{T}>"],
