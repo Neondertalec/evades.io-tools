@@ -207,14 +207,56 @@ class TextPart{
 		}else
 
 		if(this.cmd == "x"){
-			mutual.addOffset({offsetx: parseFloat(this.text)});
+			if(!this.data){
+				mutual.addOffset({offsetx: parseFloat(this.text)});
+			}else{
+				let spread = valueOrDefault(parseFloat(this.text), 0);
+	
+				prerender = (i, after)=>{
+					if(!after){
+						mutual.addOffset({offsetx: spread});
+					}else{
+						if(this.data.length - 1 == i){
+							mutual.addOffset({offsetx: -i * spread});
+						}
+					}
+				}
+			}
 		}else
 		if(this.cmd == "y"){
-			mutual.addOffset({offsety: parseFloat(this.text)});
+			if(!this.data){
+				mutual.addOffset({offsety: parseFloat(this.text)});
+			}else{
+				let spread = valueOrDefault(parseFloat(this.text), 0);
+	
+				prerender = (i, after)=>{
+					if(!after){
+						mutual.addOffset({offsety: spread});
+					}else{
+						if(this.data.length - 1 == i){
+							mutual.addOffset({offsety: -(i+1) * spread});
+						}
+					}
+				}
+			}
 		}else
 		if(this.cmd == "sx"){
 			mutual.addOffset({offsetx: parseFloat(this.text)});
 			if(!render) textRenderer.width.last += parseFloat(this.text)
+		}
+
+		else
+		if(this.cmd == "lx"){
+			if(this.data && textRenderer.lables[this.text]){
+				if(!render){
+					textRenderer.addLable(this.text, [textRenderer.lables[this.text][0], textRenderer.width.last]);
+					textRenderer.width.last += textRenderer.lables[this.text][0]-textRenderer.lables[this.text][1]
+				}
+				mutual.addOffset({offsetx: textRenderer.lables[this.text][0]-textRenderer.lables[this.text][1]});
+			}else
+			if(!render){
+				textRenderer.addLable(this.text, [textRenderer.width.last, 0]);
+			}
 		}
 
 		if(this.data){
@@ -249,6 +291,11 @@ class TextRenderer{
 	parsedText = null;
 	initElement = null;
 	widthRenderIndex = 0;
+	lables = {};
+
+	addLable(name, val){
+		this.lables[name] = val;
+	}
 
 	constructor(parsedText, initElement){
 		this.setText(parsedText, initElement);
@@ -297,7 +344,7 @@ class TextRenderer{
 			addOffset: function(o){
 				this.offsetx += (o.offsetx || 0)
 				this.offsety += (o.offsety || 0)
-			}
+			},
 		}
 
 		if(ctx.textAlign2 == "center"){

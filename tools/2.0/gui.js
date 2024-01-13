@@ -165,12 +165,14 @@ class GUINumberEditField extends GUIStringEditField{
 		this.extraData = extraData;
 		this.field.type = "number";
 		this.normalize = (v, f)=>{
+			console.log(v,f);
 			if(f){
 				v = parseFloat(v);
 				if(min !== null) v = Math.max(v, min);
 				if(max !== null) v = Math.min(v, max);
 	
 			}
+			console.log(v);
 			return v;
 		}
 
@@ -188,6 +190,11 @@ class GUINumberEditField extends GUIStringEditField{
 			this.dropDown.addEventListener("input", ()=>{this.extraData = this.dropDown.value; this.change(false)});
 			this.dropDown.addEventListener("change", ()=>{this.extraData = this.dropDown.value; this.change(true)});
 		}
+	}
+
+	update(){
+		console.error(1);
+		if(parseInt(this.field.value) != parseInt(this.value)) this.field.value = this.value.toFixed(2);
 	}
 }
 
@@ -390,6 +397,19 @@ class GUI{
 
 				GUI.createElementP("button", {className: "act-mode", innerText: "Save file"}, (btn)=>{
 					btn.onclick = ()=>{Canvas.saveFile()};
+				}, actMode);
+
+				GUI.createElementP("button", {className: "act-mode", innerText: "Rebuild"}, (btn)=>{
+					btn.onclick = ()=>{
+						for(let key in Canvas.editingLayouts){
+							let l = Canvas.editingLayouts[key].content;
+							for(let nodKey in l){
+								let node = l[nodKey];
+								if(node.textRenderer) node.textRenderer = null
+							}
+						}
+						Canvas.render();
+					};
 				}, actMode);
 			}, toolsLay);
 

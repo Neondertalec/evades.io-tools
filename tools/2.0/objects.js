@@ -557,6 +557,15 @@ class TextGroup extends EditingGroup{
 		ctx.shadowBlur = 0;
 	}
 
+	import(d1){
+		super.import(d1);
+		try{
+			cssm.add(new cssm.el(this.data.font, cssm.consts.font.format(this.data.font.replace(' ', '+'))));
+		}catch(e){
+			console.log(e)
+		}
+	}
+
 	initPack(){
 		return [
 			...super.initPack(),
